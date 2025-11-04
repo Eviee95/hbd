@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import loginIcon from "../assets/tolt.png";
 import nyilIcon from "../assets/nyil.png";
 import nextPageImage from "../assets/2.png";
@@ -62,29 +62,36 @@ import akaszt10Image from "../assets/akaszt10.png";
 import akaszt11Image from "../assets/akaszt11.png";
 import "./Card.css";
 
+interface CardType {
+  id: number;
+  image: string;
+  type: string;
+  uniqueId: number;
+}
+
 export default function Card() {
   const [showHint, setShowHint] = useState(false);
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
-  const [cards, setCards] = useState([]);
-  const [flippedCards, setFlippedCards] = useState([]);
-  const [matchedPairs, setMatchedPairs] = useState([]);
+  const [cards, setCards] = useState<CardType[]>([]);
+  const [flippedCards, setFlippedCards] = useState<number[]>([]);
+  const [matchedPairs, setMatchedPairs] = useState<string[]>([]);
   const [gameCompleted, setGameCompleted] = useState(false);
-  const [selectedAnswer, setSelectedAnswer] = useState(null);
+  const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [showQuestionResult, setShowQuestionResult] = useState("");
-  const [playerChoice, setPlayerChoice] = useState(null);
-  const [computerChoice, setComputerChoice] = useState(null);
+  const [playerChoice, setPlayerChoice] = useState<string | null>(null);
+  const [computerChoice, setComputerChoice] = useState<string | null>(null);
   const [gameResult, setGameResult] = useState("");
   const [scores, setScores] = useState({ player: 0, computer: 0 });
   const [gameFinished, setGameFinished] = useState(false);
   const [showComputerChoice, setShowComputerChoice] = useState(false);
   
   // Hangman game states
-  const [hangmanWords, setHangmanWords] = useState(["trozsák", "miafasz"]);
+  const [hangmanWords] = useState(["trozsák", "miafasz"]);
   const [currentHangmanWord, setCurrentHangmanWord] = useState("");
-  const [guessedLetters, setGuessedLetters] = useState([]);
+  const [guessedLetters, setGuessedLetters] = useState<string[]>([]);
   const [wrongGuesses, setWrongGuesses] = useState(0);
   const [hangmanGameOver, setHangmanGameOver] = useState(false);
   const [hangmanWon, setHangmanWon] = useState(false);
@@ -120,7 +127,7 @@ export default function Card() {
     setHangmanWon(false);
   };
 
-  const handleLetterGuess = (letter) => {
+  const handleLetterGuess = (letter: string) => {
     if (guessedLetters.includes(letter) || hangmanGameOver || hangmanWon) return;
 
     const newGuessedLetters = [...guessedLetters, letter];
@@ -189,7 +196,7 @@ export default function Card() {
     setGameCompleted(false);
   };
 
-  const handleCardClick = (cardId, cardType) => {
+  const handleCardClick = (cardId: number, cardType: string) => {
     if (flippedCards.length === 2 || flippedCards.includes(cardId) || matchedPairs.includes(cardType)) {
       return;
     }
@@ -201,7 +208,7 @@ export default function Card() {
       const firstCard = cards.find(card => card.uniqueId === newFlippedCards[0]);
       const secondCard = cards.find(card => card.uniqueId === newFlippedCards[1]);
 
-      if (firstCard.type === secondCard.type) {
+      if (firstCard && secondCard && firstCard.type === secondCard.type) {
         setMatchedPairs([...matchedPairs, firstCard.type]);
         setFlippedCards([]);
         
@@ -216,7 +223,7 @@ export default function Card() {
     }
   };
 
-  const handlePasswordChange = (e) => {
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
     if (message) setMessage("");
   };
@@ -235,7 +242,7 @@ export default function Card() {
     }
   };
 
-  const handleKeyPress = (e) => {
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       checkPassword();
     }
@@ -245,7 +252,7 @@ export default function Card() {
     console.log("Login clicked");
   };
 
-  const handleAnswerSelect = (answer) => {
+  const handleAnswerSelect = (answer: string) => {
     setSelectedAnswer(answer);
     
     if (answer === "C") {
@@ -261,7 +268,7 @@ export default function Card() {
     }
   };
 
-  const handleChoiceSelect = (choice) => {
+  const handleChoiceSelect = (choice: string) => {
     if (playerChoice || gameFinished) return;
 
     setPlayerChoice(choice);
@@ -276,7 +283,7 @@ export default function Card() {
     }, 300);
   };
 
-  const determineWinner = (player, computer) => {
+  const determineWinner = (player: string, computer: string) => {
     let result;
     if (player === computer) {
       result = "draw";
