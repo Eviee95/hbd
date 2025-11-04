@@ -397,6 +397,8 @@ export default function Card() {
   };
 
   const getComputerChoiceImage = () => {
+    if (!computerChoice) return null;
+    
     switch (computerChoice) {
       case 'stone':
         return oppstoneImage;
@@ -535,7 +537,7 @@ export default function Card() {
                 <div className="computer-choice-container">
                   <div className="computer-choice-label">Azahriah választása</div>
                   <div className="computer-choice">
-                    <img src={getComputerChoiceImage()} alt={computerChoice} />
+                    <img src={getComputerChoiceImage() || ''} alt={computerChoice} />
                   </div>
                 </div>
               )}
