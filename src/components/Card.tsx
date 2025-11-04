@@ -99,6 +99,28 @@ export default function Card() {
   // Hungarian letters for keyboard
   const hungarianLetters = "aábcdeéfghiíjklmnoóöőpqrstuúüűvwxyz".split("");
 
+  // VIEWPORT FIX - FEHÉR SÁV MEGOLDÁS
+  useEffect(() => {
+    // Viewport magasság beállítása a fehér sáv eltávolításához
+    const setViewportHeight = () => {
+      const vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty('--viewport-height', `${window.innerHeight}px`);
+      document.documentElement.style.setProperty('--vh', `${vh}px`);
+    };
+
+    // Eseményfigyelők
+    window.addEventListener('resize', setViewportHeight);
+    window.addEventListener('orientationchange', setViewportHeight);
+    
+    // Azonnali hívás
+    setViewportHeight();
+
+    return () => {
+      window.removeEventListener('resize', setViewportHeight);
+      window.removeEventListener('orientationchange', setViewportHeight);
+    };
+  }, []);
+
   useEffect(() => {
     if (currentPage === 11) {
       initializeCards();
