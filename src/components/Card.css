@@ -7,13 +7,13 @@
 body {
   font-family: 'Baloo 2', cursive;
   background: transparent;
-  min-height: 100vh;
+  min-height: 100dvh; /* VÁLTOZOTT: dvh */
   width: 100%;
   overflow: hidden;
 }
 
 .app-container {
-  min-height: 100vh;
+  min-height: 100dvh; /* VÁLTOZOTT: dvh */
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -24,7 +24,7 @@ body {
 
 .card {
   width: 100vw;
-  height: 100vh;
+  height: 100dvh; /* VÁLTOZOTT: dvh */
   border: none;
   border-radius: 0;
   padding: 0;
@@ -175,7 +175,7 @@ body {
 
 .arrow-bottom {
   position: absolute;
-  bottom: 40px;
+  bottom: 30px;
   left: 0;
   right: 0;
   display: flex;
@@ -764,6 +764,18 @@ body {
 
 /* RESZPONZÍV - MOBIL */
 @media (max-width: 400px) {
+  body {
+    min-height: 100dvh; /* VÁLTOZOTT: dvh */
+  }
+
+  .app-container {
+    min-height: 100dvh; /* VÁLTOZOTT: dvh */
+  }
+
+  .card {
+    height: 100dvh; /* VÁLTOZOTT: dvh */
+  }
+
   .main-content {
     top: 60%;
     padding: 0 15px;
