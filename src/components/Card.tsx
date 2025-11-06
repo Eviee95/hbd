@@ -318,10 +318,6 @@ export default function Card() {
     }
   };
 
-  const handleLogin = () => {
-    console.log("Login clicked");
-  };
-
   const handleMenuClick = () => {
     console.log("Menu clicked - navigálás a menu.png-re");
     setCurrentPage(43);
