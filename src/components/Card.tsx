@@ -104,7 +104,7 @@ export default function Card() {
   const [showComputerChoice, setShowComputerChoice] = useState(false);
   
   // Hangman game states
-  const [hangmanWords] = useState(["trozsák", "miafasz"]);
+  const [hangmanWords] = useState(["trozsák", "miafasz", "kheci", "bepisilek", "farden", "suna"]);
   const [currentHangmanWord, setCurrentHangmanWord] = useState("");
   const [guessedLetters, setGuessedLetters] = useState<string[]>([]);
   const [wrongGuesses, setWrongGuesses] = useState(0);
@@ -157,7 +157,7 @@ export default function Card() {
       initializeCards();
     }
     
-    if (currentPage === 36) {
+    if (currentPage === 35) {
       initializeHangman();
     }
 
@@ -320,7 +320,7 @@ export default function Card() {
 
   const handleMenuClick = () => {
     console.log("Menu clicked - navigálás a menu.png-re");
-    setCurrentPage(43);
+    setCurrentPage(42);
   };
 
   const handleChapterClick = (chapter: number) => {
@@ -338,7 +338,7 @@ export default function Card() {
         setCurrentPage(28);
         break;
       case 5:
-        setCurrentPage(35);
+        setCurrentPage(34);
         break;
       default:
         setCurrentPage(3);
@@ -417,7 +417,7 @@ export default function Card() {
       checkPassword();
     } else if (currentPage === 0 && isSuccess) {
       setCurrentPage(1);
-    } else if (currentPage > 0 && currentPage < 24 && currentPage !== 6 && currentPage !== 11 && currentPage !== 28 && currentPage !== 29 && currentPage !== 31 && currentPage !== 32 && currentPage !== 33 && currentPage !== 34 && currentPage !== 35 && currentPage !== 36 && currentPage !== 37 && currentPage !== 38 && currentPage !== 39 && currentPage !== 40 && currentPage !== 41 && currentPage !== 42 && currentPage !== 43) {
+    } else if (currentPage > 0 && currentPage < 24 && currentPage !== 6 && currentPage !== 11 && currentPage !== 28 && currentPage !== 29 && currentPage !== 31 && currentPage !== 32 && currentPage !== 33 && currentPage !== 34 && currentPage !== 35 && currentPage !== 36 && currentPage !== 37 && currentPage !== 38 && currentPage !== 39 && currentPage !== 40 && currentPage !== 41 && currentPage !== 42) {
       setCurrentPage(currentPage + 1);
     } else if (currentPage === 11 && gameCompleted) {
       setCurrentPage(12);
@@ -468,13 +468,13 @@ export default function Card() {
     } else if (currentPage === 34) {
       setCurrentPage(35);
     } else if (currentPage === 35) {
-      setCurrentPage(36);
-    } else if (currentPage === 36) {
       if (hangmanWon) {
-        setCurrentPage(37);
+        setCurrentPage(36);
       } else if (hangmanGameOver) {
         initializeHangman();
       }
+    } else if (currentPage === 36) {
+      setCurrentPage(37);
     } else if (currentPage === 37) {
       setCurrentPage(38);
     } else if (currentPage === 38) {
@@ -486,8 +486,6 @@ export default function Card() {
     } else if (currentPage === 41) {
       setCurrentPage(42);
     } else if (currentPage === 42) {
-      setCurrentPage(43);
-    } else if (currentPage === 43) {
       return;
     }
   };
@@ -513,107 +511,105 @@ export default function Card() {
     }
   };
 
-  const getCurrentImage = () => {
-    switch (currentPage) {
-      case 0:
-        return loginIcon;
-      case 1:
-        return nextPageImage;
-      case 2:
-        return thirdPageImage;
-      case 3:
-        return fourthPageImage;
-      case 4:
-        return fifthPageImage;
-      case 5:
-        return sixthPageImage;
-      case 6:
-        return seventhPageImage;
-      case 7:
-        return eighthPageImage;
-      case 8:
-        return ninthPageImage;
-      case 9:
-        return tenthPageImage;
-      case 10:
-        return eleventhPageImage;
-      case 11:
-        return twelfthPageImage;
-      case 12:
-        return thirteenthPageImage;
-      case 13:
-        return fourteenthPageImage;
-      case 14:
-        return fifteenthPageImage;
-      case 15:
-        return sixteenthPageImage;
-      case 16:
-        return seventeenthPageImage;
-      case 17:
-        return eighteenthPageImage;
-      case 18:
-        return nineteenthPageImage;
-      case 19:
-        return twentiethPageImage;
-      case 20:
-        return twentyFirstPageImage;
-      case 21:
-        return twentySecondPageImage;
-      case 22:
-        return twentyThirdPageImage;
-      case 23:
-        return twentyFourthPageImage;
-      case 24:
-        return twentyFifthPageImage;
-      case 25:
-        return twentySixthPageImage;
-      case 26:
-        return twentySeventhPageImage;
-      case 27:
-        return twentyEighthPageImage;
-      case 28:
-        return twentyNinthPageImage;
-      case 29:
-        return thirtiethPageImage;
-      case 30:
-        return thirtyFirstPageImage;
-      case 31:
-        return thirtySecondPageImage;
-      case 32:
-        return thirtyThirdPageImage;
-      case 33:
-        return thirtyFourthPageImage;
-      case 34:
-        return thirtyFifthPageImage;
-      case 35:
-        return thirtyFifthPageImage;
-      case 36:
-        return thirtySixthPageImage;
-      case 37:
-        return thirtySeventhPageImage;
-      case 38:
-        return thirtyEighthPageImage;
-      case 39:
-        return thirtyNinthPageImage;
-      case 40:
-        return fortiethPageImage;
-      case 41:
-        return fortyFirstPageImage;
-      case 42:
-        return fortySecondPageImage;
-      case 43:
-        return menuIcon;
-      default:
-        return loginIcon;
-    }
-  };
+const getCurrentImage = () => {
+  switch (currentPage) {
+    case 0:
+      return loginIcon;
+    case 1:
+      return nextPageImage;
+    case 2:
+      return thirdPageImage;
+    case 3:
+      return fourthPageImage;
+    case 4:
+      return fifthPageImage;
+    case 5:
+      return sixthPageImage;
+    case 6:
+      return seventhPageImage;
+    case 7:
+      return eighthPageImage;
+    case 8:
+      return ninthPageImage;
+    case 9:
+      return tenthPageImage;
+    case 10:
+      return eleventhPageImage;
+    case 11:
+      return twelfthPageImage;
+    case 12:
+      return thirteenthPageImage;
+    case 13:
+      return fourteenthPageImage;
+    case 14:
+      return fifteenthPageImage;
+    case 15:
+      return sixteenthPageImage;
+    case 16:
+      return seventeenthPageImage;
+    case 17:
+      return eighteenthPageImage;
+    case 18:
+      return nineteenthPageImage;
+    case 19:
+      return twentiethPageImage;
+    case 20:
+      return twentyFirstPageImage;
+    case 21:
+      return twentySecondPageImage;
+    case 22:
+      return twentyThirdPageImage;
+    case 23:
+      return twentyFourthPageImage;
+    case 24:
+      return twentyFifthPageImage;
+    case 25:
+      return twentySixthPageImage;
+    case 26:
+      return twentySeventhPageImage;
+    case 27:
+      return twentyEighthPageImage;
+    case 28:
+      return twentyNinthPageImage;
+    case 29:
+      return thirtiethPageImage;
+    case 30:
+      return thirtyFirstPageImage;
+    case 31:
+      return thirtySecondPageImage;
+    case 32:
+      return thirtyThirdPageImage;
+    case 33:
+      return thirtyFourthPageImage;
+    case 34:
+      return thirtyFifthPageImage;
+    case 35:
+      return thirtySixthPageImage;  // 35 → 36.png (MAGA A HANGMAN JÁTÉK)
+    case 36:
+      return thirtySeventhPageImage; // 36 → 37.png
+    case 37:
+      return thirtyEighthPageImage;
+    case 38:
+      return thirtyNinthPageImage;
+    case 39:
+      return fortiethPageImage;
+    case 40:
+      return fortyFirstPageImage;
+    case 41:
+      return fortySecondPageImage;
+    case 42:
+      return menuIcon;
+    default:
+      return loginIcon;
+  }
+};
 
   const shouldShowMenuCircle = () => {
     return currentPage >= 2 && currentPage <= 42;
   };
 
 const shouldShowArrow = () => {
-  if (currentPage === 43) return false;
+  if (currentPage === 42) return false;
   
   if (currentPage === 11) {
     return gameCompleted;
@@ -627,7 +623,6 @@ const shouldShowArrow = () => {
     return true;
   }
   
-  // 29.png-re SEMMIKOR ne jelenjen meg nyíl - csak a "Tovább" gomb van
   if (currentPage === 29) {
     return false;
   }
@@ -636,18 +631,18 @@ const shouldShowArrow = () => {
     return true;
   }
   
-  // 35.png-re IS jelenjen meg nyíl
+  // 35.png-re NE jelenjen meg nyíl - ott a hangman játék van
   if (currentPage === 35) {
-    return true;
-  }
-  
-  // 36.png-re NE jelenjen meg nyíl - ott a hangman játék van
-  if (currentPage === 36) {
     return false;
   }
   
-  // 37.png-től 42.png-ig JELENJEN MEG nyíl
-  if (currentPage === 37 || currentPage === 38 || currentPage === 39 || currentPage === 40 || currentPage === 41 || currentPage === 42) {
+  // 36.png-re JELENJEN MEG nyíl - ez a hangman utáni első oldal
+  if (currentPage === 36) {
+    return true;
+  }
+  
+  // 37.png-től 41.png-ig JELENJEN MEG nyíl
+  if (currentPage === 37 || currentPage === 38 || currentPage === 39 || currentPage === 40 || currentPage === 41) {
     return true;
   }
   
@@ -780,10 +775,10 @@ const shouldShowArrow = () => {
               )}
             </div>
           </div>
-        ) : currentPage === 36 ? (
+        ) : currentPage === 35 ? ( // VÁLTOZÁS: 35-ös oldal most a hangman játék
           <div className={`card ${hangmanWon || hangmanGameOver ? 'blurred-background' : ''}`}>
             <div className="page-image-container">
-              <img src={getCurrentImage()} alt="36.png háttér" />
+              <img src={getCurrentImage()} alt="35.png háttér" />
             </div>
             
             {shouldShowMenuCircle() && (
@@ -821,7 +816,7 @@ const shouldShowArrow = () => {
               {hangmanWon && (
                 <div className="hangman-result won">
                   <div className="result-text">🎉 Ez az Chris életben maradt!</div>
-                  <button className="play-again-btn" onClick={() => setCurrentPage(37)}>
+                  <button className="play-again-btn" onClick={() => setCurrentPage(36)}>
                     Tovább
                   </button>
                 </div>
@@ -837,11 +832,11 @@ const shouldShowArrow = () => {
               )}
             </div>
           </div>
-        ) : currentPage === 35 ? (
-          // 35-ös oldal - most már van nyíl
+        ) : currentPage === 36 ? (
+          // 36-os oldal - most már csak sima oldal, nincs hangman
           <div className="card">
             <div className="page-image-container">
-              <img src={getCurrentImage()} alt="35.png háttér" />
+              <img src={getCurrentImage()} alt="36.png háttér" />
             </div>
             
             {shouldShowMenuCircle() && (
@@ -850,14 +845,13 @@ const shouldShowArrow = () => {
               </div>
             )}
             
-            {/* NINCS TOVÁBB GOMB - CSAK NYÍL */}
             {shouldShowArrow() && (
               <div className="arrow-bottom" onClick={handleArrowClick}>
                 <img src={nyilIcon} alt="arrow" />
               </div>
             )}
           </div>
-        ) : currentPage === 43 ? (
+        ) : currentPage === 42 ? (
           // Menu.png oldal - CHAPTER KÉPEKKEL
           <div className="card">
             <div className="page-image-container">
