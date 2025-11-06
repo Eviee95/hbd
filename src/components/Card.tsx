@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import loginIcon from "../assets/tolt.png";
 import nyilIcon from "../assets/nyil.png";
+import menuIcon from "../assets/menu.png";
 import nextPageImage from "../assets/2.png";
 import thirdPageImage from "../assets/3.png";
 import fourthPageImage from "../assets/4.png";
@@ -38,6 +39,10 @@ import thirtyFifthPageImage from "../assets/35.png";
 import thirtySixthPageImage from "../assets/36.png";
 import thirtySeventhPageImage from "../assets/37.png";
 import thirtyEighthPageImage from "../assets/38.png";
+import thirtyNinthPageImage from "../assets/39.png";
+import fortiethPageImage from "../assets/40.png";
+import fortyFirstPageImage from "../assets/41.png";
+import fortySecondPageImage from "../assets/42.png";
 import cardImage from "../assets/card.png";
 import card1Image from "../assets/card1.png";
 import card2Image from "../assets/card2.png";
@@ -60,6 +65,16 @@ import akaszt8Image from "../assets/akaszt8.png";
 import akaszt9Image from "../assets/akaszt9.png";
 import akaszt10Image from "../assets/akaszt10.png";
 import akaszt11Image from "../assets/akaszt11.png";
+// Import chapter képek
+import chapter1Image from "../assets/chapter1.png";
+import chapter2Image from "../assets/chapter2.png";
+import chapter3Image from "../assets/chapter3.png";
+import chapter4Image from "../assets/chapter4.png";
+import chapter5Image from "../assets/chapter5.png";
+// Import vicc képek
+import vicc1Image from "../assets/vicc1.png";
+import vicc2Image from "../assets/vicc2.png";
+import vicc3Image from "../assets/vicc3.png";
 import "./Card.css";
 
 interface CardType {
@@ -96,29 +111,45 @@ export default function Card() {
   const [hangmanGameOver, setHangmanGameOver] = useState(false);
   const [hangmanWon, setHangmanWon] = useState(false);
 
+  // Vicc megjelenítő state-ek
+  const [showJoke, setShowJoke] = useState(false);
+  const [currentJoke, setCurrentJoke] = useState("");
+
+  // Jelszó láthatóság state
+  const [showPassword, setShowPassword] = useState(false);
+
   // Hungarian letters for keyboard
   const hungarianLetters = "aábcdeéfghiíjklmnoóöőpqrstuúüűvwxyz".split("");
 
   // VIEWPORT FIX - FEHÉR SÁV MEGOLDÁS
   useEffect(() => {
-    // Viewport magasság beállítása a fehér sáv eltávolításához
     const setViewportHeight = () => {
       const vh = window.innerHeight * 0.01;
       document.documentElement.style.setProperty('--viewport-height', `${window.innerHeight}px`);
       document.documentElement.style.setProperty('--vh', `${vh}px`);
     };
 
-    // Eseményfigyelők
     window.addEventListener('resize', setViewportHeight);
     window.addEventListener('orientationchange', setViewportHeight);
     
-    // Azonnali hívás
     setViewportHeight();
 
     return () => {
       window.removeEventListener('resize', setViewportHeight);
       window.removeEventListener('orientationchange', setViewportHeight);
     };
+  }, []);
+
+  // Vicc időzítő
+  useEffect(() => {
+    const jokeInterval = setInterval(() => {
+      const jokes = [vicc1Image, vicc2Image, vicc3Image];
+      const randomJoke = jokes[Math.floor(Math.random() * jokes.length)];
+      setCurrentJoke(randomJoke);
+      setShowJoke(true);
+    }, 4 * 60 * 1000); // 4 perc
+
+    return () => clearInterval(jokeInterval);
   }, []);
 
   useEffect(() => {
@@ -129,10 +160,19 @@ export default function Card() {
     if (currentPage === 36) {
       initializeHangman();
     }
+
+    // Amikor chapter4-re (28. oldal) navigálunk, reseteljük a kő-papír-olló játékot
+    if (currentPage === 28) {
+      setPlayerChoice(null);
+      setComputerChoice(null);
+      setGameResult("");
+      setScores({ player: 0, computer: 0 });
+      setGameFinished(false);
+      setShowComputerChoice(false);
+    }
   }, [currentPage]);
 
   useEffect(() => {
-    // Ellenőrizzük, hogy valaki elérte-e a 3 pontot
     if ((scores.player === 3 || scores.computer === 3) && currentPage === 29 && !gameFinished) {
       setGameFinished(true);
     }
@@ -140,7 +180,6 @@ export default function Card() {
 
   // Hangman game logic
   const initializeHangman = () => {
-    // Véletlenszerű szó kiválasztása
     const randomWord = hangmanWords[Math.floor(Math.random() * hangmanWords.length)];
     setCurrentHangmanWord(randomWord);
     setGuessedLetters([]);
@@ -163,7 +202,6 @@ export default function Card() {
         setHangmanGameOver(true);
       }
     } else {
-      // Check if word is completely guessed
       const wordGuessed = currentHangmanWord.split('').every(char => 
         newGuessedLetters.includes(char)
       );
@@ -197,6 +235,16 @@ export default function Card() {
         {guessedLetters.includes(letter) ? letter : '_'}
       </span>
     ));
+  };
+
+  // Vicc bezárása
+  const handleCloseJoke = () => {
+    setShowJoke(false);
+  };
+
+  // Jelszó láthatóság váltása
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
   };
 
   const initializeCards = () => {
@@ -274,6 +322,33 @@ export default function Card() {
     console.log("Login clicked");
   };
 
+  const handleMenuClick = () => {
+    console.log("Menu clicked - navigálás a menu.png-re");
+    setCurrentPage(43);
+  };
+
+  const handleChapterClick = (chapter: number) => {
+    switch (chapter) {
+      case 1:
+        setCurrentPage(2);
+        break;
+      case 2:
+        setCurrentPage(10);
+        break;
+      case 3:
+        setCurrentPage(14);
+        break;
+      case 4:
+        setCurrentPage(28);
+        break;
+      case 5:
+        setCurrentPage(35);
+        break;
+      default:
+        setCurrentPage(3);
+    }
+  };
+
   const handleAnswerSelect = (answer: string) => {
     setSelectedAnswer(answer);
     
@@ -346,7 +421,7 @@ export default function Card() {
       checkPassword();
     } else if (currentPage === 0 && isSuccess) {
       setCurrentPage(1);
-    } else if (currentPage > 0 && currentPage < 24 && currentPage !== 6 && currentPage !== 11 && currentPage !== 28 && currentPage !== 29 && currentPage !== 31 && currentPage !== 32 && currentPage !== 33 && currentPage !== 34 && currentPage !== 35 && currentPage !== 36 && currentPage !== 37) {
+    } else if (currentPage > 0 && currentPage < 24 && currentPage !== 6 && currentPage !== 11 && currentPage !== 28 && currentPage !== 29 && currentPage !== 31 && currentPage !== 32 && currentPage !== 33 && currentPage !== 34 && currentPage !== 35 && currentPage !== 36 && currentPage !== 37 && currentPage !== 38 && currentPage !== 39 && currentPage !== 40 && currentPage !== 41 && currentPage !== 42 && currentPage !== 43) {
       setCurrentPage(currentPage + 1);
     } else if (currentPage === 11 && gameCompleted) {
       setCurrentPage(12);
@@ -363,12 +438,31 @@ export default function Card() {
     } else if (currentPage === 28) {
       setCurrentPage(29);
     } else if (currentPage === 29) {
-      if (scores.player === 3) {
-        setCurrentPage(31);
+      if (gameFinished) {
+        if (scores.player === 3) {
+          setCurrentPage(31);
+        } else if (scores.computer === 3) {
+          setCurrentPage(32);
+        }
       }
     } else if (currentPage === 30) {
       setCurrentPage(0);
-      resetAllGames();
+      setPassword("");
+      setMessage("");
+      setIsSuccess(false);
+      setSelectedAnswer(null);
+      setShowQuestionResult("");
+      setPlayerChoice(null);
+      setComputerChoice(null);
+      setGameResult("");
+      setScores({ player: 0, computer: 0 });
+      setGameFinished(false);
+      setShowComputerChoice(false);
+      setGuessedLetters([]);
+      setWrongGuesses(0);
+      setHangmanGameOver(false);
+      setHangmanWon(false);
+      setShowPassword(false);
     } else if (currentPage === 31) {
       setCurrentPage(33);
     } else if (currentPage === 32) {
@@ -380,36 +474,26 @@ export default function Card() {
     } else if (currentPage === 35) {
       setCurrentPage(36);
     } else if (currentPage === 36) {
-      // Ha nyert az akasztófában, megy tovább
       if (hangmanWon) {
         setCurrentPage(37);
       } else if (hangmanGameOver) {
-        initializeHangman(); // Új szóval kezdi
+        initializeHangman();
       }
     } else if (currentPage === 37) {
       setCurrentPage(38);
     } else if (currentPage === 38) {
-      setCurrentPage(0);
-      resetAllGames();
+      setCurrentPage(39);
+    } else if (currentPage === 39) {
+      setCurrentPage(40);
+    } else if (currentPage === 40) {
+      setCurrentPage(41);
+    } else if (currentPage === 41) {
+      setCurrentPage(42);
+    } else if (currentPage === 42) {
+      setCurrentPage(43);
+    } else if (currentPage === 43) {
+      return;
     }
-  };
-
-  const resetAllGames = () => {
-    setPassword("");
-    setMessage("");
-    setIsSuccess(false);
-    setSelectedAnswer(null);
-    setShowQuestionResult("");
-    setPlayerChoice(null);
-    setComputerChoice(null);
-    setGameResult("");
-    setScores({ player: 0, computer: 0 });
-    setGameFinished(false);
-    setShowComputerChoice(false);
-    setGuessedLetters([]);
-    setWrongGuesses(0);
-    setHangmanGameOver(false);
-    setHangmanWon(false);
   };
 
   const handleCircleClick = () => {
@@ -506,27 +590,105 @@ export default function Card() {
       case 34:
         return thirtyFifthPageImage;
       case 35:
-        return thirtySixthPageImage;
+        return thirtyFifthPageImage;
       case 36:
-        return thirtySixthPageImage; // 36.png - itt jelenik meg az akasztófa játék
+        return thirtySixthPageImage;
       case 37:
         return thirtySeventhPageImage;
       case 38:
         return thirtyEighthPageImage;
+      case 39:
+        return thirtyNinthPageImage;
+      case 40:
+        return fortiethPageImage;
+      case 41:
+        return fortyFirstPageImage;
+      case 42:
+        return fortySecondPageImage;
+      case 43:
+        return menuIcon;
       default:
         return loginIcon;
     }
   };
 
+  const shouldShowMenuCircle = () => {
+    return currentPage >= 2 && currentPage <= 42;
+  };
+
+const shouldShowArrow = () => {
+  if (currentPage === 43) return false;
+  
+  if (currentPage === 11) {
+    return gameCompleted;
+  }
+  
+  if (currentPage === 24) {
+    return false;
+  }
+  
+  if (currentPage === 25 || currentPage === 26 || currentPage === 27) {
+    return true;
+  }
+  
+  // 29.png-re SEMMIKOR ne jelenjen meg nyíl - csak a "Tovább" gomb van
+  if (currentPage === 29) {
+    return false;
+  }
+  
+  if (currentPage === 31 || currentPage === 32 || currentPage === 33 || currentPage === 34) {
+    return true;
+  }
+  
+  // 35.png-re IS jelenjen meg nyíl
+  if (currentPage === 35) {
+    return true;
+  }
+  
+  // 36.png-re NE jelenjen meg nyíl - ott a hangman játék van
+  if (currentPage === 36) {
+    return false;
+  }
+  
+  // 37.png-től 42.png-ig JELENJEN MEG nyíl
+  if (currentPage === 37 || currentPage === 38 || currentPage === 39 || currentPage === 40 || currentPage === 41 || currentPage === 42) {
+    return true;
+  }
+  
+  return (
+    currentPage === 1 || currentPage === 2 || currentPage === 3 || currentPage === 4 || 
+    currentPage === 5 || currentPage === 7 || currentPage === 8 || currentPage === 9 || 
+    currentPage === 10 || currentPage === 12 || currentPage === 13 || currentPage === 14 || 
+    currentPage === 15 || currentPage === 16 || currentPage === 17 || currentPage === 18 || 
+    currentPage === 19 || currentPage === 20 || currentPage === 21 || currentPage === 22 || 
+    currentPage === 23 || currentPage === 28
+  );
+};
+
   if (currentPage > 0) {
     return (
       <div className="app-container">
+        {/* Vicc overlay */}
+        {showJoke && (
+          <div className="joke-overlay active">
+            <div className="joke-container">
+              <div className="close-joke" onClick={handleCloseJoke}>×</div>
+              <img className="joke-image" src={currentJoke} alt="Vicc" />
+            </div>
+          </div>
+        )}
+        
         {currentPage === 29 ? (
-          // Kő-papír-olló játék - 30.png
           <div className={`card ${gameResult ? 'blurred-background' : ''}`}>
-            <div className="login-button">
+            <div className="page-image-container">
               <img src={getCurrentImage()} alt={`page ${currentPage + 1}`} />
             </div>
+            
+            {shouldShowMenuCircle() && (
+              <div className="menu-circle" onClick={handleMenuClick}>
+                {/* ÜRES KÖR - NINCS KÉP */}
+              </div>
+            )}
             
             <div className="game-container">
               {!gameResult && !gameFinished && (
@@ -613,16 +775,27 @@ export default function Card() {
                   </button>
                 </>
               )}
+
+              {/* NYÍL CSAK AKKOR, HA A SZÁMÍTÓGÉP NYERT */}
+              {shouldShowArrow() && (
+                <div className="arrow-bottom" onClick={handleArrowClick}>
+                  <img src={nyilIcon} alt="arrow" />
+                </div>
+              )}
             </div>
           </div>
         ) : currentPage === 36 ? (
-          // Akasztófa játék - 36.png háttérrel
           <div className={`card ${hangmanWon || hangmanGameOver ? 'blurred-background' : ''}`}>
-            <div className="login-button">
+            <div className="page-image-container">
               <img src={getCurrentImage()} alt="36.png háttér" />
             </div>
             
-            {/* Akasztófa játék komponens */}
+            {shouldShowMenuCircle() && (
+              <div className="menu-circle" onClick={handleMenuClick}>
+                {/* ÜRES KÖR - NINCS KÉP */}
+              </div>
+            )}
+            
             <div className="hangman-game">
               <div className="hangman-image">
                 <img src={getHangmanImage()} alt={`akasztófa ${wrongGuesses} hibával`} />
@@ -652,7 +825,7 @@ export default function Card() {
               {hangmanWon && (
                 <div className="hangman-result won">
                   <div className="result-text">🎉 Ez az Chris életben maradt!</div>
-                  <button className="play-again-btn" onClick={handleArrowClick}>
+                  <button className="play-again-btn" onClick={() => setCurrentPage(37)}>
                     Tovább
                   </button>
                 </div>
@@ -661,41 +834,72 @@ export default function Card() {
               {hangmanGameOver && (
                 <div className="hangman-result lost">
                   <div className="result-text">😔 Vége a játéknak! A szó: {currentHangmanWord}</div>
-                  <button className="play-again-btn" onClick={handleArrowClick}>
+                  <button className="play-again-btn" onClick={initializeHangman}>
                     Új szó
                   </button>
                 </div>
               )}
             </div>
           </div>
-        ) : currentPage === 37 || currentPage === 38 ? (
-          // 37.png és 38.png - csak a kép és a nyíl
+        ) : currentPage === 35 ? (
+          // 35-ös oldal - most már van nyíl
           <div className="card">
-            <div className="login-button">
-              <img src={getCurrentImage()} alt={`page ${currentPage + 1}`} />
+            <div className="page-image-container">
+              <img src={getCurrentImage()} alt="35.png háttér" />
             </div>
             
-            <div className="arrow-bottom" onClick={handleArrowClick}>
-              <img src={nyilIcon} alt="arrow" />
-            </div>
+            {shouldShowMenuCircle() && (
+              <div className="menu-circle" onClick={handleMenuClick}>
+                {/* ÜRES KÖR - NINCS KÉP */}
+              </div>
+            )}
+            
+            {/* NINCS TOVÁBB GOMB - CSAK NYÍL */}
+            {shouldShowArrow() && (
+              <div className="arrow-bottom" onClick={handleArrowClick}>
+                <img src={nyilIcon} alt="arrow" />
+              </div>
+            )}
           </div>
-        ) : currentPage === 31 || currentPage === 32 || currentPage === 33 || currentPage === 34 || currentPage === 35 ? (
-          // Győztes képek
+        ) : currentPage === 43 ? (
+          // Menu.png oldal - CHAPTER KÉPEKKEL
           <div className="card">
-            <div className="login-button">
-              <img src={getCurrentImage()} alt={`page ${currentPage + 1}`} />
+            <div className="page-image-container">
+              <img src={getCurrentImage()} alt="menu" />
             </div>
             
-            <div className="arrow-bottom" onClick={handleArrowClick}>
-              <img src={nyilIcon} alt="arrow" />
+            {/* Chapter képek */}
+            <div className="chapter-images-container">
+              <div className="chapter-image-wrapper" onClick={() => handleChapterClick(1)}>
+                <img src={chapter1Image} alt="Chapter 1" className="chapter-image" />
+              </div>
+              <div className="chapter-image-wrapper" onClick={() => handleChapterClick(2)}>
+                <img src={chapter2Image} alt="Chapter 2" className="chapter-image" />
+              </div>
+              <div className="chapter-image-wrapper" onClick={() => handleChapterClick(3)}>
+                <img src={chapter3Image} alt="Chapter 3" className="chapter-image" />
+              </div>
+              <div className="chapter-image-wrapper" onClick={() => handleChapterClick(4)}>
+                <img src={chapter4Image} alt="Chapter 4" className="chapter-image" />
+              </div>
+              <div className="chapter-image-wrapper" onClick={() => handleChapterClick(5)}>
+                <img src={chapter5Image} alt="Chapter 5" className="chapter-image" />
+              </div>
             </div>
+            
+            {/* NINCS NYÍL A MENU.PNG-N */}
           </div>
         ) : (
-          // Minden más oldal
           <div className="card">
-            <div className="login-button">
+            <div className="page-image-container">
               <img src={getCurrentImage()} alt={`page ${currentPage + 1}`} />
             </div>
+
+            {shouldShowMenuCircle() && (
+              <div className="menu-circle" onClick={handleMenuClick}>
+                {/* ÜRES KÖR - NINCS KÉP */}
+              </div>
+            )}
 
             {currentPage === 6 && (
               <>
@@ -776,23 +980,13 @@ export default function Card() {
 
             {currentPage === 30 && (
               <div className="final-message">
-                <h2 className="final-title">Köszönjük a játékot!</h2>
-                <p className="final-text">
-                  Reméljük, élvezte ezt a kis kalandot! Köszönjük, hogy velünk tartott.
-                </p>
                 <button className="restart-btn" onClick={handleArrowClick}>
                   Újrakezdés
                 </button>
               </div>
             )}
 
-            {currentPage !== 28 && currentPage !== 6 && currentPage !== 29 && currentPage !== 30 && currentPage !== 31 && currentPage !== 32 && currentPage !== 33 && currentPage !== 34 && currentPage !== 35 && currentPage !== 36 && currentPage !== 37 && currentPage !== 38 && (
-              <div className="arrow-bottom" onClick={handleArrowClick}>
-                <img src={nyilIcon} alt="arrow" />
-              </div>
-            )}
-
-            {currentPage === 28 && (
+            {shouldShowArrow() && (
               <div className="arrow-bottom" onClick={handleArrowClick}>
                 <img src={nyilIcon} alt="arrow" />
               </div>
@@ -805,21 +999,40 @@ export default function Card() {
 
   return (
     <div className="app-container">
+      {/* Vicc overlay */}
+      {showJoke && (
+        <div className="joke-overlay active">
+          <div className="joke-container">
+            <div className="close-joke" onClick={handleCloseJoke}>×</div>
+            <img className="joke-image" src={currentJoke} alt="Vicc" />
+          </div>
+        </div>
+      )}
+      
       <div className="card">
-        <div className="login-button" onClick={handleLogin}>
+        <div className="page-image-container">
           <img src={loginIcon} alt="login" />
         </div>
 
         <div className="main-content">
           <div className="password-box">
-            <input
-              type="text"
-              className="password-input"
-              placeholder="Üsse be a jelszót!"
-              value={password}
-              onChange={handlePasswordChange}
-              onKeyPress={handleKeyPress}
-            />
+            <div className="password-input-wrapper">
+              <input
+                type={showPassword ? "text" : "password"}
+                className="password-input"
+                placeholder="Üsse be a jelszót!"
+                value={password}
+                onChange={handlePasswordChange}
+                onKeyPress={handleKeyPress}
+              />
+              <button 
+                type="button" 
+                className="password-toggle"
+                onClick={togglePasswordVisibility}
+              >
+                {showPassword ? "🙈" : "👁️"}
+              </button>
+            </div>
           </div>
 
           <div className={`message ${message ? (isSuccess ? "correct" : "incorrect") : ""}`}>

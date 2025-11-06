@@ -4,7 +4,6 @@
   box-sizing: border-box;
 }
 
-/* ALAP VÁLTOZÓK */
 :root {
   --viewport-height: 100dvh;
   --safe-area-inset-top: env(safe-area-inset-top, 0px);
@@ -13,7 +12,6 @@
   --safe-area-inset-right: env(safe-area-inset-right, 0px);
 }
 
-/* ALAP STÍLUSOK - FIX A FEHÉR SÁVHOZ */
 html, body {
   margin: 0;
   padding: 0;
@@ -48,7 +46,7 @@ body {
   width: 100vw;
   height: 100dvh;
   height: var(--viewport-height, 100dvh);
-  min-height: -webkit-fill-available; /* iOS támogatás */
+  min-height: -webkit-fill-available;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -66,7 +64,7 @@ body {
   width: 100vw;
   height: 100dvh;
   height: var(--viewport-height, 100dvh);
-  height: -webkit-fill-available; /* iOS */
+  height: -webkit-fill-available;
   border: none;
   border-radius: 0;
   padding: 0;
@@ -78,29 +76,58 @@ body {
   box-shadow: none;
 }
 
-.login-button {
+.page-image-container {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  cursor: pointer;
   z-index: 1000;
   display: flex;
   justify-content: center;
   align-items: center;
   background: transparent;
+  pointer-events: none;
 }
 
-.login-button img {
+.page-image-container img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   transition: filter 0.3s ease;
+  pointer-events: none;
 }
 
-/* Háttérkép homályosítása csak */
-.blurred-background .login-button img {
+.menu-circle {
+  position: absolute;
+  top: 15%;
+  left: 8%;
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+  z-index: 1004;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.3s ease;
+  pointer-events: auto;
+}
+
+.menu-circle:hover {
+  background: rgba(200, 180, 255, 1);
+  transform: scale(1.15);
+  box-shadow: 
+    0 0 0 3px rgba(200, 180, 255, 0.6),
+    0 0 20px 8px rgba(180, 160, 255, 0.8),
+    0 0 35px 12px rgba(160, 140, 255, 0.5);
+}
+
+.menu-circle:active {
+  transform: scale(1.05);
+  background: rgba(160, 140, 255, 0.95);
+}
+
+.blurred-background .page-image-container img {
   filter: blur(10px);
 }
 
@@ -403,7 +430,6 @@ body {
   background-color: rgba(198, 40, 40, 0.1);
 }
 
-/* 30.png - Kő-papír-olló játék */
 .game-container {
   position: absolute;
   top: 65%;
@@ -471,7 +497,6 @@ body {
   filter: none;
 }
 
-/* Computer choice styles */
 .computer-choice-container {
   display: flex;
   flex-direction: column;
@@ -624,7 +649,6 @@ body {
   transform: translateY(-2px);
 }
 
-/* 31.png - Köszöntő oldal */
 .final-message {
   position: absolute;
   top: 50%;
@@ -674,7 +698,6 @@ body {
   transform: translateY(-2px);
 }
 
-/* Akasztófa játék stílusok */
 .hangman-game {
   position: absolute;
   top: 0;
@@ -804,7 +827,109 @@ body {
   color: #c62828;
 }
 
-/* RESZPONZÍV - MOBIL */
+/* Chapter képek stílusai */
+.chapter-images-container {
+  position: absolute;
+  top: 38%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 1003;
+  width: 80%;
+  max-width: 300px;
+}
+
+.chapter-image-wrapper {
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 2px solid transparent;
+}
+
+.chapter-image-wrapper:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  border-color: rgba(180, 160, 255, 0.8);
+}
+
+.chapter-image {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 10px;
+}
+
+/* Vicc megjelenítő stílusok - frissítve világosabb háttérrel */
+.joke-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4); /* Világosabb háttér - ugyanolyan mint a kő-papír-olló */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.joke-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.joke-container {
+  position: relative;
+  width: 80%;
+  max-width: 500px;
+  background: white;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2); /* Kisebb árnyék */
+  transform: scale(0.9);
+  transition: transform 0.3s ease;
+}
+
+.joke-overlay.active .joke-container {
+  transform: scale(1);
+}
+
+.joke-image {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.close-joke {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 2001;
+}
+
+.close-joke:hover {
+  background: rgba(0, 0, 0, 0.9);
+  transform: scale(1.1);
+}
+
 @media (max-width: 400px) {
   html, body {
     height: 100dvh;
@@ -819,6 +944,17 @@ body {
   .card {
     height: 100dvh;
     min-height: -webkit-fill-available;
+  }
+
+  .menu-circle {
+    top: 12.2%;
+    left: 3%;
+    width: 45px;
+    height: 45px;
+  }
+  
+  .menu-circle:hover {
+    transform: scale(1.1);
   }
 
   .main-content {
@@ -1035,7 +1171,6 @@ body {
     font-size: 14px;
   }
 
-  /* Akasztófa mobil stílusok */
   .hangman-game {
     padding: 15px;
   }
@@ -1075,9 +1210,64 @@ body {
   .result-text {
     font-size: 1.2rem;
   }
+
+  /* Chapter képek reszponzív stílusai */
+  .chapter-images-container {
+    width: 90%;
+    max-width: 250px;
+    gap: 8px;
+  }
+  
+  .chapter-image-wrapper:hover {
+    transform: translateY(-2px);
+  }
+
+  /* Vicc megjelenítő reszponzív stílusok */
+  .joke-container {
+    width: 90%;
+    max-width: 350px;
+  }
+  
+  .close-joke {
+    width: 35px;
+    height: 35px;
+    font-size: 20px;
+    top: 10px;
+    right: 10px;
+  }
+  .password-input-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 300px;
+  margin: 0 auto;
 }
 
-/* EXTRA BIZTONSÁGI BEÁLLÍTÁSOK */
+.password-input {
+  width: 100%;
+  padding: 12px 45px 12px 15px;
+  font-size: 16px;
+  height: 26px;
+  box-sizing: border-box;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 5px;
+  z-index: 2;
+}
+
+.password-toggle:hover {
+  opacity: 0.7;
+}
+}
+
 @supports(padding: max(0px)) {
   .card {
     padding-top: max(0px, env(safe-area-inset-top));
