@@ -75,6 +75,12 @@ import chapter5Image from "../assets/chapter5.png";
 import vicc1Image from "../assets/vicc1.png";
 import vicc2Image from "../assets/vicc2.png";
 import vicc3Image from "../assets/vicc3.png";
+// Import betöltési képek
+import betoImage from "../assets/beto.png";
+import betoltes1Image from "../assets/betoltes1.png";
+import betoltes2Image from "../assets/betoltes2.png";
+import betoltes3Image from "../assets/betoltes3.png";
+import betoltes4Image from "../assets/betoltes4.png";
 import "./Card.css";
 
 interface CardType {
@@ -89,7 +95,7 @@ export default function Card() {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
-  const [currentPage, setCurrentPage] = useState(0);
+  const [currentPage, setCurrentPage] = useState(-1); // -1-ről indul a betöltés
   const [cards, setCards] = useState<CardType[]>([]);
   const [flippedCards, setFlippedCards] = useState<number[]>([]);
   const [matchedPairs, setMatchedPairs] = useState<string[]>([]);
@@ -118,7 +124,10 @@ export default function Card() {
   // Jelszó láthatóság state
   const [showPassword, setShowPassword] = useState(false);
 
-  // Hungarian letters for keyboard
+  // Betöltési animáció state-ek
+  const [currentLoadingFrame, setCurrentLoadingFrame] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
+
   const hungarianLetters = "aábcdeéfghiíjklmnoóöőpqrstuúüűvwxyz".split("");
 
   // VIEWPORT FIX - FEHÉR SÁV MEGOLDÁS
@@ -140,17 +149,50 @@ export default function Card() {
     };
   }, []);
 
+  // BETÖLTÉSI ANIMÁCIÓ
+  useEffect(() => {
+  if (isLoading) {
+    const loadingFrames = [
+      betoltes1Image,
+      betoltes2Image, 
+      betoltes3Image,
+      betoltes4Image
+    ];
+
+    let frameIndex = 0;
+      
+       // Lassabb animáció: minden kép 1 másodpercig látszik
+    const animationInterval = setInterval(() => {
+      frameIndex++;
+      if (frameIndex < loadingFrames.length) {
+        setCurrentLoadingFrame(frameIndex);
+      } else {
+        // Animáció vége
+        clearInterval(animationInterval);
+        setTimeout(() => {
+          setIsLoading(false);
+          setCurrentPage(0); // Átváltás a login oldalra
+        }, 1000); // +1 másodperc várakozás az utolsó kép után
+      }
+    }, 1000); // 1000ms = 1 másodperc minden kép
+
+    return () => clearInterval(animationInterval);
+  }
+}, [isLoading]);
+
   // Vicc időzítő
   useEffect(() => {
-    const jokeInterval = setInterval(() => {
-      const jokes = [vicc1Image, vicc2Image, vicc3Image];
-      const randomJoke = jokes[Math.floor(Math.random() * jokes.length)];
-      setCurrentJoke(randomJoke);
-      setShowJoke(true);
-    }, 4 * 60 * 1000); // 4 perc
+    if (currentPage >= 0) { // Csak akkor induljon, ha már vége a betöltésnek
+      const jokeInterval = setInterval(() => {
+        const jokes = [vicc1Image, vicc2Image, vicc3Image];
+        const randomJoke = jokes[Math.floor(Math.random() * jokes.length)];
+        setCurrentJoke(randomJoke);
+        setShowJoke(true);
+      }, 4 * 60 * 1000); // 4 perc
 
-    return () => clearInterval(jokeInterval);
-  }, []);
+      return () => clearInterval(jokeInterval);
+    }
+  }, [currentPage]);
 
   useEffect(() => {
     if (currentPage === 11) {
@@ -161,7 +203,6 @@ export default function Card() {
       initializeHangman();
     }
 
-    // Amikor chapter4-re (28. oldal) navigálunk, reseteljük a kő-papír-olló játékot
     if (currentPage === 28) {
       setPlayerChoice(null);
       setComputerChoice(null);
@@ -511,150 +552,184 @@ export default function Card() {
     }
   };
 
-const getCurrentImage = () => {
-  switch (currentPage) {
-    case 0:
-      return loginIcon;
-    case 1:
-      return nextPageImage;
-    case 2:
-      return thirdPageImage;
-    case 3:
-      return fourthPageImage;
-    case 4:
-      return fifthPageImage;
-    case 5:
-      return sixthPageImage;
-    case 6:
-      return seventhPageImage;
-    case 7:
-      return eighthPageImage;
-    case 8:
-      return ninthPageImage;
-    case 9:
-      return tenthPageImage;
-    case 10:
-      return eleventhPageImage;
-    case 11:
-      return twelfthPageImage;
-    case 12:
-      return thirteenthPageImage;
-    case 13:
-      return fourteenthPageImage;
-    case 14:
-      return fifteenthPageImage;
-    case 15:
-      return sixteenthPageImage;
-    case 16:
-      return seventeenthPageImage;
-    case 17:
-      return eighteenthPageImage;
-    case 18:
-      return nineteenthPageImage;
-    case 19:
-      return twentiethPageImage;
-    case 20:
-      return twentyFirstPageImage;
-    case 21:
-      return twentySecondPageImage;
-    case 22:
-      return twentyThirdPageImage;
-    case 23:
-      return twentyFourthPageImage;
-    case 24:
-      return twentyFifthPageImage;
-    case 25:
-      return twentySixthPageImage;
-    case 26:
-      return twentySeventhPageImage;
-    case 27:
-      return twentyEighthPageImage;
-    case 28:
-      return twentyNinthPageImage;
-    case 29:
-      return thirtiethPageImage;
-    case 30:
-      return thirtyFirstPageImage;
-    case 31:
-      return thirtySecondPageImage;
-    case 32:
-      return thirtyThirdPageImage;
-    case 33:
-      return thirtyFourthPageImage;
-    case 34:
-      return thirtyFifthPageImage;
-    case 35:
-      return thirtySixthPageImage;  // 35 → 36.png (MAGA A HANGMAN JÁTÉK)
-    case 36:
-      return thirtySeventhPageImage; // 36 → 37.png
-    case 37:
-      return thirtyEighthPageImage;
-    case 38:
-      return thirtyNinthPageImage;
-    case 39:
-      return fortiethPageImage;
-    case 40:
-      return fortyFirstPageImage;
-    case 41:
-      return fortySecondPageImage;
-    case 42:
-      return menuIcon;
-    default:
-      return loginIcon;
-  }
-};
+  const getCurrentImage = () => {
+    switch (currentPage) {
+      case -1: // Betöltési állapot
+        return betoImage;
+      case 0:
+        return loginIcon;
+      case 1:
+        return nextPageImage;
+      case 2:
+        return thirdPageImage;
+      case 3:
+        return fourthPageImage;
+      case 4:
+        return fifthPageImage;
+      case 5:
+        return sixthPageImage;
+      case 6:
+        return seventhPageImage;
+      case 7:
+        return eighthPageImage;
+      case 8:
+        return ninthPageImage;
+      case 9:
+        return tenthPageImage;
+      case 10:
+        return eleventhPageImage;
+      case 11:
+        return twelfthPageImage;
+      case 12:
+        return thirteenthPageImage;
+      case 13:
+        return fourteenthPageImage;
+      case 14:
+        return fifteenthPageImage;
+      case 15:
+        return sixteenthPageImage;
+      case 16:
+        return seventeenthPageImage;
+      case 17:
+        return eighteenthPageImage;
+      case 18:
+        return nineteenthPageImage;
+      case 19:
+        return twentiethPageImage;
+      case 20:
+        return twentyFirstPageImage;
+      case 21:
+        return twentySecondPageImage;
+      case 22:
+        return twentyThirdPageImage;
+      case 23:
+        return twentyFourthPageImage;
+      case 24:
+        return twentyFifthPageImage;
+      case 25:
+        return twentySixthPageImage;
+      case 26:
+        return twentySeventhPageImage;
+      case 27:
+        return twentyEighthPageImage;
+      case 28:
+        return twentyNinthPageImage;
+      case 29:
+        return thirtiethPageImage;
+      case 30:
+        return thirtyFirstPageImage;
+      case 31:
+        return thirtySecondPageImage;
+      case 32:
+        return thirtyThirdPageImage;
+      case 33:
+        return thirtyFourthPageImage;
+      case 34:
+        return thirtyFifthPageImage;
+      case 35:
+        return thirtySixthPageImage;
+      case 36:
+        return thirtySeventhPageImage;
+      case 37:
+        return thirtyEighthPageImage;
+      case 38:
+        return thirtyNinthPageImage;
+      case 39:
+        return fortiethPageImage;
+      case 40:
+        return fortyFirstPageImage;
+      case 41:
+        return fortySecondPageImage;
+      case 42:
+        return menuIcon;
+      default:
+        return loginIcon;
+    }
+  };
+
+  const getLoadingFrameImage = () => {
+    const loadingFrames = [
+      betoltes1Image,
+      betoltes2Image, 
+      betoltes3Image,
+      betoltes4Image
+    ];
+    return loadingFrames[currentLoadingFrame] || betoltes1Image;
+  };
 
   const shouldShowMenuCircle = () => {
     return currentPage >= 2 && currentPage <= 42;
   };
 
-const shouldShowArrow = () => {
-  if (currentPage === 42) return false;
-  
-  if (currentPage === 11) {
-    return gameCompleted;
+  const shouldShowArrow = () => {
+    if (currentPage === 42) return false;
+    
+    if (currentPage === 11) {
+      return gameCompleted;
+    }
+    
+    if (currentPage === 24) {
+      return false;
+    }
+    
+    if (currentPage === 25 || currentPage === 26 || currentPage === 27) {
+      return true;
+    }
+    
+    if (currentPage === 29) {
+      return false;
+    }
+    
+    if (currentPage === 31 || currentPage === 32 || currentPage === 33 || currentPage === 34) {
+      return true;
+    }
+    
+    if (currentPage === 35) {
+      return false;
+    }
+    
+    if (currentPage === 36) {
+      return true;
+    }
+    
+    if (currentPage === 37 || currentPage === 38 || currentPage === 39 || currentPage === 40 || currentPage === 41) {
+      return true;
+    }
+    
+    return (
+      currentPage === 1 || currentPage === 2 || currentPage === 3 || currentPage === 4 || 
+      currentPage === 5 || currentPage === 7 || currentPage === 8 || currentPage === 9 || 
+      currentPage === 10 || currentPage === 12 || currentPage === 13 || currentPage === 14 || 
+      currentPage === 15 || currentPage === 16 || currentPage === 17 || currentPage === 18 || 
+      currentPage === 19 || currentPage === 20 || currentPage === 21 || currentPage === 22 || 
+      currentPage === 23 || currentPage === 28
+    );
+  };
+
+  // BETÖLTÉSI EKRÁN
+  if (isLoading) {
+    return (
+      <div className="app-container">
+        <div className="card">
+          <div className="page-image-container">
+            <img src={getCurrentImage()} alt="beto" />
+          </div>
+          
+          {/* Betöltési animáció középre igazítva */}
+          <div className="loading-animation-container">
+            <img 
+              src={getLoadingFrameImage()} 
+              alt={`Loading frame ${currentLoadingFrame + 1}`}
+              className="loading-frame"
+            />
+          </div>
+        </div>
+      </div>
+    );
   }
-  
-  if (currentPage === 24) {
-    return false;
-  }
-  
-  if (currentPage === 25 || currentPage === 26 || currentPage === 27) {
-    return true;
-  }
-  
-  if (currentPage === 29) {
-    return false;
-  }
-  
-  if (currentPage === 31 || currentPage === 32 || currentPage === 33 || currentPage === 34) {
-    return true;
-  }
-  
-  // 35.png-re NE jelenjen meg nyíl - ott a hangman játék van
-  if (currentPage === 35) {
-    return false;
-  }
-  
-  // 36.png-re JELENJEN MEG nyíl - ez a hangman utáni első oldal
-  if (currentPage === 36) {
-    return true;
-  }
-  
-  // 37.png-től 41.png-ig JELENJEN MEG nyíl
-  if (currentPage === 37 || currentPage === 38 || currentPage === 39 || currentPage === 40 || currentPage === 41) {
-    return true;
-  }
-  
-  return (
-    currentPage === 1 || currentPage === 2 || currentPage === 3 || currentPage === 4 || 
-    currentPage === 5 || currentPage === 7 || currentPage === 8 || currentPage === 9 || 
-    currentPage === 10 || currentPage === 12 || currentPage === 13 || currentPage === 14 || 
-    currentPage === 15 || currentPage === 16 || currentPage === 17 || currentPage === 18 || 
-    currentPage === 19 || currentPage === 20 || currentPage === 21 || currentPage === 22 || 
-    currentPage === 23 || currentPage === 28
-  );
-};
+
+  // TÖBBI KÓD MARAD A MEGFELELŐ HELYEN...
+  // [A többi komponens kódja változatlan marad, csak a return utáni részt másolom át...]
 
   if (currentPage > 0) {
     return (
@@ -767,7 +842,6 @@ const shouldShowArrow = () => {
                 </>
               )}
 
-              {/* NYÍL CSAK AKKOR, HA A SZÁMÍTÓGÉP NYERT */}
               {shouldShowArrow() && (
                 <div className="arrow-bottom" onClick={handleArrowClick}>
                   <img src={nyilIcon} alt="arrow" />
@@ -775,7 +849,7 @@ const shouldShowArrow = () => {
               )}
             </div>
           </div>
-        ) : currentPage === 35 ? ( // VÁLTOZÁS: 35-ös oldal most a hangman játék
+        ) : currentPage === 35 ? (
           <div className={`card ${hangmanWon || hangmanGameOver ? 'blurred-background' : ''}`}>
             <div className="page-image-container">
               <img src={getCurrentImage()} alt="35.png háttér" />
@@ -833,7 +907,6 @@ const shouldShowArrow = () => {
             </div>
           </div>
         ) : currentPage === 36 ? (
-          // 36-os oldal - most már csak sima oldal, nincs hangman
           <div className="card">
             <div className="page-image-container">
               <img src={getCurrentImage()} alt="36.png háttér" />
@@ -852,13 +925,11 @@ const shouldShowArrow = () => {
             )}
           </div>
         ) : currentPage === 42 ? (
-          // Menu.png oldal - CHAPTER KÉPEKKEL
           <div className="card">
             <div className="page-image-container">
               <img src={getCurrentImage()} alt="menu" />
             </div>
             
-            {/* Chapter képek */}
             <div className="chapter-images-container">
               <div className="chapter-image-wrapper" onClick={() => handleChapterClick(1)}>
                 <img src={chapter1Image} alt="Chapter 1" className="chapter-image" />
@@ -876,8 +947,6 @@ const shouldShowArrow = () => {
                 <img src={chapter5Image} alt="Chapter 5" className="chapter-image" />
               </div>
             </div>
-            
-            {/* NINCS NYÍL A MENU.PNG-N */}
           </div>
         ) : (
           <div className="card">
